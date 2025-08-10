@@ -1,47 +1,26 @@
-from dotenv import load_dotenv
-import os
-from agent import Agent
-
-load_dotenv()
-gemini_api_key = os.getenv("GEMINI_API_KEY")
-
-agent = Agent(
-    name = "Bank Agent",
-    instructions = "you are a bank agent that responds to the user's queries about the bank and it's services",
-    model = "gemini-1.5-flash",
-    api_key = gemini_api_key,
-    verbose = True,
-    tools = []
-)
-
 # --------------------------
 # Bank Agent Chatbot Project
 # --------------------------
 
-# ✅ IMPORTS (Standard + Gemini AI Setup)
+# ✅ IMPORTS
+import os
 import sys
 import time
+from dotenv import load_dotenv
 
-# Optional Gemini Integration Setup (if needed later)
+# ✅ Load Environment Variables (like GEMINI API Key)
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+# ✅ Optional Gemini Integration (only if you plan to use it later)
 try:
     from google.generativeai import configure, GenerativeModel
+    configure(api_key=GEMINI_API_KEY)
+    model = GenerativeModel('gemini-pro')
 except ImportError:
-    print("❌ Google Generative AI module not found. If you're not using Gemini, ignore this.")
-    print("Install with: pip install google-generativeai")
-    # Continue without Gemini
-
-# ✅ GEMINI API KEY (Put your actual API Key here if needed)
-GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
-
-# Optional Gemini Configuration
-def setup_gemini():
-    try:
-        configure(api_key=GEMINI_API_KEY)
-        model = GenerativeModel('gemini-pro')
-        return model
-    except Exception as e:
-        print(f"❌ Gemini setup failed: {e}")
-        return None
+    print("❌ Gemini module not installed. Skipping Gemini setup.")
+except Exception as e:
+    print(f"❌ Gemini setup failed: {e}")
 
 # 🔹 Main Virtual Assistant
 def main():
@@ -83,7 +62,7 @@ def handle_account_balance():
         return
 
     print("✅ Fetching your account balance...")
-    time.sleep(1)  # Simulate processing
+    time.sleep(1)
     print("💰 Your current balance is: ₹35,250.50")
 
 # 🔹 Function: Loan Department Agent
@@ -131,6 +110,6 @@ def credit_card_agent():
     else:
         print("❌ Invalid option. Please try again.")
 
-# 🔚 Start the Chatbot
+# 🔚 Run the Chatbot
 if __name__ == "__main__":
     main()
